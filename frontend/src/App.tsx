@@ -24,7 +24,15 @@ const App: React.FC = () => {
         }),
       });
 
+      if (!response.ok) {
+        console.error(`Error: HTTP status ${response.status}`);
+        setPrediction(`Error: HTTP status ${response.status}`);
+        return;
+      }
+
       const data = await response.json();
+      console.log('API Response:', data);
+      // Set prediction based on API response structure
       setPrediction(data.success ? data.data : data.msg || 'An error occurred');
     } catch (error) {
       console.error("Error fetching prediction:", error);
@@ -44,7 +52,7 @@ const App: React.FC = () => {
       }}
     >
       <section style={{ width: '100%', maxWidth: '400px', padding: '20px', boxSizing: 'border-box' }}>
-        <h1 style={{ marginBottom: '100px' }}>Data Center Job Success Forecaster</h1>
+        <h1 style={{ marginBottom: '20px' }}>Data Center Job Success Forecaster</h1>
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
           <label>
             Max Memory Percentage:
@@ -86,7 +94,7 @@ const App: React.FC = () => {
               value={maxGpuBytes}
               onChange={(e) => setMaxGpuBytes(e.target.value)}
               required
-              min="0"
+              min="0" 
               style={{ width: '100%', padding: '8px', marginTop: '4px' }}
             />
           </label>
