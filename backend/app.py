@@ -1,19 +1,25 @@
 import pandas as pd
+from flask_cors import CORS, cross_origin
 from flask import Flask, request
 from model import get_model
 from utils.Response import Response
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config["CORS_HEADERS"] = "Content-Type"
 
 
 @app.route("/predict", methods=["POST"])
+@cross_origin()
 def predict():
     data = request.get_json()
 
-    max_memory_pct = data.get("max_memory_pct")  # Max percentage of memory utilized
-    cpus_requested = data.get("cpus_requested")  # CPU cores requested
-    exec_time_sec = data.get("exec_time_sec")  # Execution time in seconds
-    max_gpu_bytes = data.get("max_gpu_bytes")  # Max GPU memory used in bytes
+    max_memory_pct = float(
+        data.get("max_memory_pct")
+    )  # Max percentage of memory utilized
+    cpus_requested = float(data.get("cpus_requested"))  # CPU cores requested
+    exec_time_sec = float(data.get("exec_time_sec"))  # Execution time in seconds
+    max_gpu_bytes = float(data.get("max_gpu_bytes"))  # Max GPU memory used in bytes
 
     if max_memory_pct and cpus_requested and exec_time_sec and max_gpu_bytes:
         model, label_encoder = get_model()
